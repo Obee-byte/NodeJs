@@ -18,6 +18,7 @@ app.use((req, res, next) => {
         res.header('Acess-Control-Allow-Methods', 'PUT, POST, GET, PATCH, DELETE')
         return res.status(200).json({})
     }
+    next()
 })
 
 app.use('/products', productRoutes) // We actually using other file
