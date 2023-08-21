@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Quest (work ip)</title>
+  <link rel="stylesheet" href="/css/story.css">
+</head>
+<body>
+  <% if (!combinedData) { %>
+    <p class="loading">Грузим.. </p>
+  <% } else { %>
+  <div class="cont">
+    <div class="text">Ты в начале дороги, куда ты пойдешь?</div>
+  </div>
+  <button onclick="refreshData()">Обновить CSV и localStorage</button>
+  <% } %>
+</body>
+<script>
+  combinedData = `<%= JSON.stringify(combinedData) %>`
+  var newStr = combinedData.replace(/\n/g, '');
+  var str_res = newStr.replace(/&#34;/g, '"')
+  const jsonArray = JSON.parse(str_res);
+  // Теперь Массив красиво отформатирован
+  textArray = jsonArray[0]
+  btnArray = jsonArray[1]
+  currentPage = parseInt(jsonArray[2])
+  window.enemies = jsonArray[3];
+  const current = textArray.find(item => parseInt(item.id) === currentPage);
+  currentText = current.Text
+  currentIMG = current.img
+  currentFunc = [] 
+  //Массив с id кнопок
+  currentButtons = current.button_id.split(",").map(Number)
+  var currentFunctions = []
+  const container = document.querySelector('.cont')
+  const div_text = document.querySelector('.text')
+  div_text.textContent = currentText
+
+  // Добавляем кнопки для каждого элемента в массиве
+  currentButtons.forEach(item => {
+    try {
+      const link = document.createElement("a");
+      const reqButton = btnArray.filter(thing => thing.id == item)
+      const label = reqButton.map(ever => ever.Label);
+      const hraf = reqButton.map(ever => ever.butt_id)
+      currFunc = reqButton.map(ever => ever.function_name)[0]
+      // console.log("currFunc:", currFunc)
+      if (currFunc !== '') {
+        if (currFunc.includes(',')) {
+          currFunc = currFunc.replace(",", ";");
+        }
+
+        currentFunc.push(currFunc)
+        //Записываем функцию для каждой кнопки
+        link.setAttribute('onclick', currentFunc[item-1]) 
+      }
+      if (label.length == 0) {
+        console.log('Не нашел кнопки с id ' + item);
+        return}
+      link.textContent = label;
+      link.setAttribute('href', '/story/' + (parseInt(hraf)+1))
+      // console.log("Color:", reqButton.map(ever => ever.color))
+      if(reqButton.map(ever => ever.color)[0] !== '') {
+        link.classList.add(reqButton.map(ever => ever.color))
+      }
+      container.appendChild(link);
+    }
+    catch (err){console.log("Ошибка:", err);}
+  })
+
+  var img = new Image();
+  img.src = "../images/bg/" + currentIMG;
+  img.onload = function() {
+    document.body.style.backgroundImage = "url('../images/bg/" + currentIMG + "')";
+  }
+  img.onerror = function() {
+    document.body.style.backgroundColor = "#000";
+  };
+  console.log("Code is working");
+</script>
+<script src="/js/functions.js"></script>
+</html>

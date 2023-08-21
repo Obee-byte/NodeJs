@@ -1,0 +1,40 @@
+body {
+    background-image: url('');
+    color: yellow;
+  }
+  .text {
+    font-weight: bold;
+  }
+  .loading {
+    font-size: 25pt;
+  }
+  .cont {
+    margin-top: 300px;
+    font-size: 16pt;
+    font-family: Verdana, Geneva, Tahoma, sans-serif;
+    display: flex;
+    gap: 25px;
+    justify-content: center;
+    flex-direction: column;
+    text-align: center;
+    align-items: center;
+  }
+  .blue {
+    background-color: rgb(53, 105, 219);
+    color: white;
+  }
+  .red {
+    background-color: rgb(168, 48, 190);
+    color: white;
+  }
+  a {
+    padding: 10px 20px;
+    border-radius: 5px;
+    color: white;
+    font-weight: bold;
+    background-color: #59518d;
+    text-decoration: none;
+  }
+  a:active {
+    background-color: brown;
+  }
