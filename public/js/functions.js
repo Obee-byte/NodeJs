@@ -52,6 +52,7 @@ function refreshData() {
   }
 
   function e_encountZ(event) {
+
     return new Promise(resolve => {
       randomNum = Math.random();
       let foundEnemy = true; // Флаг, указывающий, был ли найден враг
@@ -60,12 +61,13 @@ function refreshData() {
         console.log('el.random is ' + el.random);
         if (parseFloat(el.random) > randomNum) {
           foundEnemy = false;
-          localStorage.setItem('enemy_name', el.name)          
+          localStorage.setItem('enemy_name', el.name)         
         }
       });
-
       if (!foundEnemy) {
+        event.preventDefault(); // Предотвращение навигации по ссылке
         setTimeout(() => {
+          alert('I must work!!')
           window.location.href = "/story/101";
           resolve(false); // Предотвращение перехода по ссылке /2
         }, 0);

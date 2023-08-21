@@ -6,3 +6,4 @@ package-lock.json
 /server/enemy.csv
 /server/main.csv
 /server/logs.txt
+serv.js
