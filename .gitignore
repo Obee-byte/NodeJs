@@ -1,8 +1,0 @@
-/node_modules
-package.json
-package-lock.json
-/public/images
-/server/buttons.csv
-/server/enemy.csv
-/server/main.csv
-/server/logs.txt
