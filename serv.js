@@ -1,5 +1,9 @@
 const http = require('http')
 const app = require('./app')
+const fs = require('fs')
+
+fs.writeFile('./server/logs.txt', '',(err) => {
+});
 
 const port = 8080
 const HOST = '192.168.137.108'

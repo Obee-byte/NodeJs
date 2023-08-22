@@ -59,26 +59,12 @@
         link.setAttribute('onclick', currentValue)
 
         currentFunc = currentFunc.filter(func => func !== currFunc);
-        //Записываем функцию для каждой кнопки
-
-        /* currentFunc.forEach((value, index) => {
-          let trimmedValue = value.substring(0, value.indexOf('('));
-          let link = links[index]; // Получаем текущий link из коллекции ссылок
-          
-          span.classList.add('descr', trimmedValue);
-          link.setAttribute('onclick', value);
-        }); */
-        /* let currentValue = currentFunc[index];
-        let trimmedValue = currentValue.substring(0, currentValue.indexOf('('));
-        span.classList.add('descr', trimmedValue)
-        link.setAttribute('onclick', currentValue)  */
       }
       if (label.length == 0) {
         console.log('Не нашел кнопки с id ' + item);
         return}
       link.textContent = label;
       link.setAttribute('href', '/story/' + (parseInt(hraf)+1))
-      // console.log("Color:", reqButton.map(ever => ever.color))
       if(reqButton.map(ever => ever.color)[0] !== '') {
         link.classList.add(reqButton.map(ever => ever.color))
       }

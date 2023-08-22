@@ -1,7 +1,14 @@
 health = parseInt(localStorage.getItem('health'))
 lust = parseInt(localStorage.getItem('lust'))
 hunger = parseInt(localStorage.getItem('hunger'))
+console.log("hunger:", hunger)
 foods = parseInt(localStorage.getItem('foods'))
+
+if (hunger > 100) {
+  window.location.replace('/story/500');
+  hunger = 0
+  localStorage.setItem('hunger', 0)
+}
 
 const enemies = window.enemies;
 getEnem = localStorage.getItem('enemy_name')
@@ -61,28 +68,44 @@ function refreshData() {
       });
   }
 
-  function e_encountZ(event) {
+function e_encountZ(event) {
 
-    return new Promise(resolve => {
-      randomNum = Math.random();
-      let foundEnemy = true; // Флаг, указывающий, был ли найден враг
+  return new Promise(resolve => {
+    randomNum = Math.random();
+    let foundEnemy = true; // Флаг, указывающий, был ли найден враг
 
-      enemies.forEach(el => {
-        console.log('el.random is ' + el.random);
-        if (parseFloat(el.random) > randomNum) {
-          foundEnemy = false;
-          localStorage.setItem('enemy_name', el.name)         
-        }
-      });
-      if (!foundEnemy) {
-        event.preventDefault(); // Предотвращение навигации по ссылке
-        setTimeout(() => {
-          alert('I must work!!')
-          window.location.href = "/story/101";
-          resolve(false); // Предотвращение перехода по ссылке /2
-        }, 0);
-      } else {
-        resolve(true); // Разрешение перехода по ссылке /2
+    enemies.forEach(el => {
+      console.log('el.random is ' + el.random);
+      if (parseFloat(el.random) > randomNum) {
+        foundEnemy = false;
+        localStorage.setItem('enemy_name', el.name)         
       }
     });
-  }
+    if (!foundEnemy) {
+      event.preventDefault(); // Предотвращение навигации по ссылке
+      setTimeout(() => {
+        alert('I must work!!')
+        window.location.href = "/story/101";
+        resolve(false); // Предотвращение перехода по ссылке /2
+      }, 0);
+    } else {
+      resolve(true); // Разрешение перехода по ссылке /2
+    }
+  });
+}
+
+const links = document.querySelectorAll('a')
+links.forEach(function(link) {
+  link.addEventListener('click', handleClick);
+});
+
+function handleClick(event) {
+  event.preventDefault();
+
+  // Выполнение нужных действий
+  hunger += 25
+  localStorage.setItem('hunger', hunger)
+
+  // Затем выполнение перехода по ссылке
+  window.location.href = event.target.href;
+}
