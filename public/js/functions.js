@@ -1,5 +1,8 @@
 health = parseInt(localStorage.getItem('health'))
 lust = parseInt(localStorage.getItem('lust'))
+hunger = parseInt(localStorage.getItem('hunger'))
+foods = parseInt(localStorage.getItem('foods'))
+
 const enemies = window.enemies;
 getEnem = localStorage.getItem('enemy_name')
 
@@ -11,32 +14,39 @@ else {
   textElement.textContent = newText
 }
 
-//Добавить описание в скобочках (успешная вероятность: 50%)
-
 console.log('Current HP is ' + health);
 console.log('Current L: ' + lust );
+
+function satiate(value) {
+  if (hunger <= 0) {
+    hunger -= value
+    localStorage.setItem('hunger', hunger)
+  }
+  else {
+    alert('Ты уже сыт!')
+  }
+}
 
 function decreaseHP(value) {
     health -= value
     localStorage.setItem('health', health)
-    console.log('Decreased HP: ' + health );
 }
 
 function increaseL(value) {
     lust += value
     localStorage.setItem('lust', lust)
-    console.log('Increased L: ' + lust );
 }
 
 function healHP(value) {
     health += value
     localStorage.setItem('health', health)
-    console.log('Increased HP: ' + health );
 }
 
 function refreshData() {
     localStorage.setItem('health', '100')
     localStorage.setItem('lust', '0')
+    localStorage.setItem('hunger', 0)
+    localStorage.setItem('foods', 0)
     localStorage.removeItem('enemy_name')
     fetch('/r')
       .then(response => {

@@ -39,22 +39,39 @@
   div_text.textContent = currentText
 
   // Добавляем кнопки для каждого элемента в массиве
-  currentButtons.forEach(item => {
+  currentButtons.forEach((item, index) => {
     try {
       const link = document.createElement("a");
+      const span = document.createElement("span");
       const reqButton = btnArray.filter(thing => thing.id == item)
       const label = reqButton.map(ever => ever.Label);
       const hraf = reqButton.map(ever => ever.butt_id)
       currFunc = reqButton.map(ever => ever.function_name)[0]
-      // console.log("currFunc:", currFunc)
+      console.log("currFunc:", currFunc)
       if (currFunc !== '') {
         if (currFunc.includes(',')) {
           currFunc = currFunc.replace(",", ";");
         }
-
         currentFunc.push(currFunc)
+        let currentValue = currentFunc[0]
+        let trimmedValue = currentValue.substring(0, currentValue.indexOf('('));
+        span.classList.add('descr', trimmedValue)
+        link.setAttribute('onclick', currentValue)
+
+        currentFunc = currentFunc.filter(func => func !== currFunc);
         //Записываем функцию для каждой кнопки
-        link.setAttribute('onclick', currentFunc[item-1]) 
+
+        /* currentFunc.forEach((value, index) => {
+          let trimmedValue = value.substring(0, value.indexOf('('));
+          let link = links[index]; // Получаем текущий link из коллекции ссылок
+          
+          span.classList.add('descr', trimmedValue);
+          link.setAttribute('onclick', value);
+        }); */
+        /* let currentValue = currentFunc[index];
+        let trimmedValue = currentValue.substring(0, currentValue.indexOf('('));
+        span.classList.add('descr', trimmedValue)
+        link.setAttribute('onclick', currentValue)  */
       }
       if (label.length == 0) {
         console.log('Не нашел кнопки с id ' + item);
@@ -66,6 +83,7 @@
         link.classList.add(reqButton.map(ever => ever.color))
       }
       container.appendChild(link);
+      container.appendChild(span);
     }
     catch (err){console.log("Ошибка:", err);}
   })
@@ -81,4 +99,5 @@
   console.log("Code is working");
 </script>
 <script src="/js/functions.js"></script>
+<script src="/js/check.js"></script>
 </html>

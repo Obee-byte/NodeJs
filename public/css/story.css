@@ -5,6 +5,10 @@ body {
   .text {
     font-weight: bold;
   }
+  span {
+    margin-bottom: 15px;
+    font-size: 12pt;
+  }
   .loading {
     font-size: 25pt;
   }
@@ -13,7 +17,7 @@ body {
     font-size: 16pt;
     font-family: Verdana, Geneva, Tahoma, sans-serif;
     display: flex;
-    gap: 25px;
+    gap: 10px;
     justify-content: center;
     flex-direction: column;
     text-align: center;
