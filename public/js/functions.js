@@ -1,23 +1,34 @@
+/* var currentSize = JSON.stringify(localStorage).length;
+console.log("Текущий размер localStorage:", currentSize, "bytes");
+ */
 health = parseInt(localStorage.getItem('health'))
 lust = parseInt(localStorage.getItem('lust'))
 hunger = parseInt(localStorage.getItem('hunger'))
+currtime = parseFloat(localStorage.getItem('time'))
+time_multiplier = parseFloat(localStorage.getItem('t_m'))
+console.log("currtime:", currtime)
 
 let stHome_event = localStorage.getItem('homeKey');
 let home_e = JSON.parse(stHome_event);
 
 console.log("window.location:", window.curr_loc)
 
+if (currtime >= 9 && currtime < 18) {
+  time_multiplier = 1
+  localStorage.setItem('t_m', time_multiplier)
+}
+else {
+  time_multiplier = 2
+  localStorage.setItem('t_m', time_multiplier)
+}
+
 if (window.curr_loc == 'home') {
   check_eRobber()
 }
 
-if (window.curr_loc == 'streets') {
-  e_encountZ(event, )
-}
-
 foods = parseInt(localStorage.getItem('foods'))
 
-if (hunger > 100) {
+if (hunger > 500) {
   window.location.replace('/story/500');
   hunger = 0
   localStorage.setItem('hunger', 0)
@@ -69,6 +80,8 @@ function refreshData() {
     localStorage.setItem('foods', 0)
     home = {'door_event': true, 'window_event': true}
     localStorage.setItem('homeKey', JSON.stringify(home))
+    localStorage.setItem('time', 9)
+    localStorage.setItem('t_m', 0)
     localStorage.removeItem('enemy_name')
     fetch('/r')
       .then(response => {
@@ -82,6 +95,15 @@ function refreshData() {
         console.error('Error:', error);
       });
   }
+function time_go(value) {
+  currtime += (value/60)
+  const links = document.querySelectorAll('a')
+  links.forEach(function(link) {
+    link.addEventListener('click', function(){ handleClick(event, value)});
+  });
+  localStorage.setItem('time', currtime)
+}
+
 
 function e_encountZ(event, value) {
 
@@ -90,14 +112,13 @@ function e_encountZ(event, value) {
     let foundEnemy = true; // Флаг, указывающий, был ли найден враг
 
     enemies.forEach(el => {
-      console.log('el.random is ' + el.random);
-      if (parseFloat(el.random) > randomNum) {
+      console.log(el.random*value);
+      if (parseFloat(el.random*value) > randomNum) {
         foundEnemy = false;
         localStorage.setItem('enemy_name', el.name)         
       }
     });
     if (!foundEnemy) {
-      event.preventDefault(); // Предотвращение навигации по ссылке
       setTimeout(() => {
         alert('I must work!!')
         window.location.href = "/story/101";
@@ -109,20 +130,14 @@ function e_encountZ(event, value) {
   });
 }
 
-const links = document.querySelectorAll('a')
-links.forEach(function(link) {
-  link.addEventListener('click', handleClick);
-});
+if (window.curr_loc == 'streets') {
+  e_encountZ(this, time_multiplier)
+}
 
-function handleClick(event) {
-  event.preventDefault();
 
-  // Выполнение нужных действий
-  hunger += 25
+function handleClick(event, value) {
+  hunger += (0+value)
   localStorage.setItem('hunger', hunger)
-
-  // Затем выполнение перехода по ссылке
-  window.location.href = event.target.href;
 }
 
 function check_eRobber(event) {
