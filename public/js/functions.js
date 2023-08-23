@@ -1,7 +1,20 @@
 health = parseInt(localStorage.getItem('health'))
 lust = parseInt(localStorage.getItem('lust'))
 hunger = parseInt(localStorage.getItem('hunger'))
-console.log("hunger:", hunger)
+
+let stHome_event = localStorage.getItem('homeKey');
+let home_e = JSON.parse(stHome_event);
+
+console.log("window.location:", window.curr_loc)
+
+if (window.curr_loc == 'home') {
+  check_eRobber()
+}
+
+if (window.curr_loc == 'streets') {
+  e_encountZ(event, )
+}
+
 foods = parseInt(localStorage.getItem('foods'))
 
 if (hunger > 100) {
@@ -54,6 +67,8 @@ function refreshData() {
     localStorage.setItem('lust', '0')
     localStorage.setItem('hunger', 0)
     localStorage.setItem('foods', 0)
+    home = {'door_event': true, 'window_event': true}
+    localStorage.setItem('homeKey', JSON.stringify(home))
     localStorage.removeItem('enemy_name')
     fetch('/r')
       .then(response => {
@@ -68,7 +83,7 @@ function refreshData() {
       });
   }
 
-function e_encountZ(event) {
+function e_encountZ(event, value) {
 
   return new Promise(resolve => {
     randomNum = Math.random();
@@ -108,4 +123,17 @@ function handleClick(event) {
 
   // Затем выполнение перехода по ссылке
   window.location.href = event.target.href;
+}
+
+function check_eRobber(event) {
+  randomNum = Math.random()
+  console.log("check_eRobber  randomNum:", randomNum)
+  if (home_e.door_event && randomNum <= 0.1) {
+    alert('Вошли через дверь!')
+    window.location.replace('/story/510');
+  }
+  else if(home_e.window_event && randomNum >= 0.9) {
+    alert('Вошли через окно!')
+    window.location.replace('/story/530');
+  }
 }

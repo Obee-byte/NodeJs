@@ -28,6 +28,9 @@
   currentPage = parseInt(jsonArray[2])
   window.enemies = jsonArray[3];
   const current = textArray.find(item => parseInt(item.id) === currentPage);
+  window.curr_loc = current.location  
+  console.log("curr_loc:", curr_loc)
+  
   currentText = current.Text
   currentIMG = current.img
   currentFunc = [] 
@@ -47,7 +50,8 @@
       const label = reqButton.map(ever => ever.Label);
       const hraf = reqButton.map(ever => ever.butt_id)
       currFunc = reqButton.map(ever => ever.function_name)[0]
-      console.log("currFunc:", currFunc)
+      //функции текущей кнопки
+      // console.log("currFunc:", currFunc)
       if (currFunc !== '') {
         if (currFunc.includes(',')) {
           currFunc = currFunc.replace(",", ";");
