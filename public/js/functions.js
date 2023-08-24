@@ -11,8 +11,6 @@ console.log("currtime:", currtime)
 let stHome_event = localStorage.getItem('homeKey');
 let home_e = JSON.parse(stHome_event);
 
-console.log("window.location:", window.curr_loc)
-
 if (currtime >= 9 && currtime < 18) {
   time_multiplier = 1
   localStorage.setItem('t_m', time_multiplier)

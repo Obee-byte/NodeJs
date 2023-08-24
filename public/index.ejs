@@ -28,9 +28,7 @@
   currentPage = parseInt(jsonArray[2])
   window.enemies = jsonArray[3];
   const current = textArray.find(item => parseInt(item.id) === currentPage);
-  window.curr_loc = current.location  
-  console.log("curr_loc:", curr_loc)
-  
+  window.curr_loc = current.location    
   currentText = current.Text
   currentIMG = current.img
   currentFunc = [] 
