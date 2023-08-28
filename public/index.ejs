@@ -51,14 +51,24 @@
       //функции текущей кнопки
       // console.log("currFunc:", currFunc)
       if (currFunc !== '') {
-        if (currFunc.includes(',')) {
-          currFunc = currFunc.replace(",", ";");
-        }
         currentFunc.push(currFunc)
+        // Работаем с правильным парсингом функций
         let currentValue = currentFunc[0]
-        let trimmedValue = currentValue.substring(0, currentValue.indexOf('('));
-        span.classList.add('descr', trimmedValue)
-        link.setAttribute('onclick', currentValue)
+        if (currentValue) {
+          while (currentValue.includes('&#39;')) {
+            currentValue = currentValue.replace('&#39;', "'")
+          }
+
+          let trimmedValue = currentValue.substring(0, currentValue.indexOf(')'));
+
+          if (trimmedValue.includes(' ')) {
+            while (trimmedValue.includes(' ')) {
+              trimmedValue = trimmedValue.replace(' ', '_')
+            }
+          }
+          span.classList.add('descr', trimmedValue)
+          link.setAttribute('onclick', currentValue)
+        }
 
         currentFunc = currentFunc.filter(func => func !== currFunc);
       }
