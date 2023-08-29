@@ -3,7 +3,8 @@ console.log("Текущий размер localStorage:", currentSize/1024, "Kbyt
 
 health = parseInt(localStorage.getItem('health'))
 lust = parseInt(localStorage.getItem('lust'))
-hunger = parseInt(localStorage.getItem('hunger'))
+hunger = parseFloat(localStorage.getItem('hunger'))
+console.log("hunger:", hunger)
 currtime = parseFloat(localStorage.getItem('time'))
 time_multiplier = parseFloat(localStorage.getItem('t_m'))
 console.log("currtime:", currtime)
@@ -28,8 +29,9 @@ if (window.curr_loc == 'home') {
 }
 
 foods = parseInt(localStorage.getItem('foods'))
+console.log("foods:", foods)
 
-if (hunger > 500) {
+if (hunger > 100) {
   window.location.replace('/story/500');
   hunger = 0
   localStorage.setItem('hunger', 0)
@@ -45,18 +47,39 @@ else {
   newText = textElement.textContent.replace('snames', getEnem)
   textElement.textContent = newText
 }
-
-console.log('Current HP is ' + health);
-console.log('Current L: ' + lust );
-
-function satiate(value) {
-  if (hunger <= 0) {
-    hunger -= value
-    localStorage.setItem('hunger', hunger)
-  }
-  else if (hunger >= 250) {
-    alert('Ты уже сыт!')
-  }
+function satiate(event, value) {
+  event.preventDefault()
+    if (hunger < 0) {
+      hunger = 0
+    }
+    if (hunger >= 0 && foods >= value) {
+      foods -= value
+      hunger -= value
+      if (hunger < 0) {
+        hunger = 0
+      }
+      localStorage.setItem('foods', foods)
+      localStorage.setItem('hunger', hunger)
+      window.location.href = event.target.href
+    }
+    else if (hunger <= 100) {
+      alert('Ты уже сыт!')
+    }
+    else if (foods <= value && foods >= 0 && hunger != 0) {
+      foods = 0
+      hunger -= 5
+      alert('Ты собрала все свои припасы и с жадностью съела')
+      localStorage.setItem('hunger', hunger)
+      localStorage.setItem('foods', foods)
+      setTimeout(() => {
+      window.location.replace('/story/50')
+      }, 0);
+    }
+    else if (foods == 0) {
+      alert('у тебя нет еды!')
+    }
+    else {window.location.href = event.target.href}
+  
 }
 
 function decreaseHP(value) {
@@ -70,8 +93,11 @@ function increaseL(value) {
 }
 
 function healHP(value) {
+  if (health <= 100) {
     health += value
     localStorage.setItem('health', health)
+  }
+  else {hunger -= value;localStorage.setItem('hunger', hunger)}
 }
 
 function refreshData() {
@@ -81,8 +107,9 @@ function refreshData() {
     localStorage.setItem('foods', 0)
     home = {'door_event': true, 'window_event': true}
     places = [
-      { type: 'supermarket', capacity: 250, items: ['scotch', 'vine', 'apples'] },
-      { type: 'store', capacity: 50, items: ['pineapples', 'cherry'] }
+      { type: 'supermarket', capacity: 1400, items: ['scotch', 'vine', 'apples'] },
+      { type: 'store', capacity: 700, items: ['scotch', 'cherry'] },
+      { type: 'trash', capacity: 2500, items: ['scotch', 'wood1', 'bolts1'] }
     ]
     resources = []
     localStorage.setItem('places', JSON.stringify(places));
@@ -104,12 +131,14 @@ function refreshData() {
       });
   }
 function time_go(value) {
-  currtime += (value/60)
-  const links = document.querySelectorAll('a')
-  links.forEach(function(link) {
-    link.addEventListener('click', function(){ handleClick(event, (value/5))});
-  });
-  localStorage.setItem('time', currtime)
+  new Promise (resolve =>{
+    currtime += (value/60)
+    hunger += (0+(value/28))
+    localStorage.setItem('hunger', hunger)
+    localStorage.setItem('time', currtime)
+    resolve(true)
+  })
+  
 }
 
 function grab_finded() {
@@ -130,7 +159,7 @@ function grab_finded() {
 
 var storedPlaces = localStorage.getItem('places');
 var places = storedPlaces ? JSON.parse(storedPlaces) : [];
-console.log(places);
+// console.log(places);
 
 function try_find(place, v_item, random, link) {
   randomNum = Math.random();
@@ -147,9 +176,11 @@ function try_find(place, v_item, random, link) {
         foundItem = false;
         }
       else if (places[i].type === place && v_item == 'food') {
-        alert('Еда')
-        places[i].capacity -= 15
+        alert('Еда!')
+        places[i].capacity -= 17
         localStorage.setItem('places', JSON.stringify(places));
+        foods += 17
+        localStorage.setItem('foods', foods)
         window.location.replace('/story/' + (parseInt(link)+2))
         foundItem = false;
       }
@@ -190,8 +221,7 @@ function e_encountZ(event, value) {
     }
   });
 }
-
-// TODO начни делать front-end
+// TODO добей foods и hunger  
 // TODO продумай логику захватов и плохих событий
 
 window.resources = []
@@ -219,11 +249,6 @@ function repair_d() {
 
 if (window.curr_loc == 'streets') {
   e_encountZ(this, time_multiplier)
-}
-
-function handleClick(event, value) {
-  hunger += (0+value)
-  localStorage.setItem('hunger', hunger)
 }
 
 function check_eRobber(value) {

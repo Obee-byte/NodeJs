@@ -19,9 +19,21 @@ setTimeout(() => {
       progressBar.style.setProperty('--progress-percent', percent+'%');
     }
     
-    // Пример использования: обновляем прогресс-бар до 75%
-    const progress = 100;
-    updateProgressBar(progress);
+    health = parseInt(localStorage.getItem('health'))
+
+    const health_progress = health;
+    updateProgressBar(health_progress)
+    updateHungerBar(hunger)
+
+    hunger = parseFloat(localStorage.getItem('hunger'))
+    
+    
+    function updateHungerBar(percent) {
+      const hungryBar = document.querySelector('.rect_hungry');
+      oldWidth = 138;
+      newWidth = oldWidth - parseFloat((percent * 1.38))
+      hungryBar.style.width = newWidth+'px'
+    }
                   
     }, 10)
 
