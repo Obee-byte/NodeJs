@@ -107,13 +107,30 @@ function time_go(value) {
   currtime += (value/60)
   const links = document.querySelectorAll('a')
   links.forEach(function(link) {
-    link.addEventListener('click', function(){ handleClick(event, value)});
+    link.addEventListener('click', function(){ handleClick(event, (value/5))});
   });
   localStorage.setItem('time', currtime)
 }
 
+function grab_finded() {
+  return new Promise (resolve => {
+    num = Math.random()
+    grabbed = false
+    if (num <= 0.1) {
+      grabbed = true
+    }
+    if (grabbed) {
+      setTimeout(() => {
+      window.location.replace('/story/150')
+      resolve(false)}, 0)
+    }
+    resolve(true)
+  })
+}
+
 var storedPlaces = localStorage.getItem('places');
 var places = storedPlaces ? JSON.parse(storedPlaces) : [];
+console.log(places);
 
 function try_find(place, v_item, random, link) {
   randomNum = Math.random();
@@ -157,7 +174,6 @@ function e_encountZ(event, value) {
     let foundEnemy = true; // Флаг, указывающий, был ли найден враг
 
     enemies.forEach(el => {
-      console.log(el.random*value);
       if (parseFloat(el.random*value) > randomNum) {
         foundEnemy = false;
         localStorage.setItem('enemy_name', el.name)         
@@ -175,15 +191,17 @@ function e_encountZ(event, value) {
   });
 }
 
-// TODO напиши больше функций и проверь их работу
+// TODO начни делать front-end
+// TODO продумай логику захватов и плохих событий
 
-window.resources = ["bolts1", "wood1", "hammer", "wood2", "scotch", "bolts2"]
+window.resources = []
+window.stringsToCheck = ["scotch", "wood1", "hammer", "wood2", "bolts1", "bolts2"]
 function repair_d() {
   allHave = true
   return new Promise(resolve => {
-  var stringsToCheck = ["scotch", "wood1", "hammer", "wood2", "bolts1", "bolts2"]
+  
   if (
-    stringsToCheck.every(function(string) {return window.resources.includes(string);})) {
+    window.stringsToCheck.every(function(string) {return window.resources.includes(string);})) {
       allHave = false
     }
   if (!allHave) {
@@ -203,21 +221,24 @@ if (window.curr_loc == 'streets') {
   e_encountZ(this, time_multiplier)
 }
 
-
 function handleClick(event, value) {
   hunger += (0+value)
   localStorage.setItem('hunger', hunger)
 }
 
-function check_eRobber() {
+function check_eRobber(value) {
   randomNum = Math.random()
-  console.log("check_eRobber  randomNum:", randomNum)
-  if (home_e.door_event && randomNum <= 0.1) {
-    alert('Вошли через дверь!')
-    window.location.replace('/story/510');
+  door = parseFloat(0.07*value)
+  window = parseFloat(0.14*value)
+  if (home_e.door_event && randomNum <= door) {
+    setTimeout(() => {
+      alert('Вошли через дверь!')
+      window.location.replace('/story/510');
+    }, 500);
   }
-  else if(home_e.window_event && randomNum >= 0.9) {
-    alert('Вошли через окно!')
-    window.location.replace('/story/530');
-  }
+  else if(home_e.window_event && randomNum >= door && randomNum <= window) {
+    setTimeout(() => {
+      alert('Вошли через окно!')
+      window.location.replace('/story/530');
+  }, 500);}
 }

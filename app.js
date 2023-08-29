@@ -12,6 +12,15 @@ app.use(express.static('public'))
 
 app.set('views', path.join(__dirname, 'public'))
 
+// Middleware для установки заголовков кэширования
+app.use((req, res, next) => {
+  // Установка заголовков кэширования только для изображений
+  if (req.url.startsWith('/images/')) {
+    res.setHeader('Cache-Control', 'public, max-age=86400'); // Кэширование на 24 часа
+  }
+  next();
+});
+
 let logs = []
 
 setInterval(() => {
@@ -37,13 +46,6 @@ app.get('/r', async (req, res) => {
     console.error('Error:', error);
     res.status(500).send('Internal Server Error');
   }
-  /* csvReader.readCSVFiles()
-    .then(() => {
-      console.log(`Data successfully refreshed:`);
-    })
-    .catch(error => {
-      res.status(500).send('Error refreshing data');
-    }); */
     writeLogsToFile(logs);
 });
 
