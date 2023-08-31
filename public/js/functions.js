@@ -15,6 +15,13 @@ let home_e = JSON.parse(stHome_event);
 resources_l = localStorage.getItem('resources')
 window.resources = JSON.parse(resources_l)
 
+if (health <= 0) {
+  alert('Ты вырубилась!')
+
+}
+if (currtime > 24) {
+  currtime = 0
+}
 if (currtime >= 9 && currtime < 18) {
   time_multiplier = 1
   localStorage.setItem('t_m', time_multiplier)
@@ -24,8 +31,9 @@ else {
   localStorage.setItem('t_m', time_multiplier)
 }
 
+
 if (window.curr_loc == 'home') {
-  check_eRobber()
+  check_eRobber(time_multiplier)
 }
 
 foods = parseInt(localStorage.getItem('foods'))
@@ -41,6 +49,7 @@ const enemies = window.enemies;
 getEnem = localStorage.getItem('enemy_name')
 
 if (!getEnem) {
+  getEnem = 'Простачок'
 }
 else {
   textElement = document.querySelector('.text')
@@ -62,10 +71,13 @@ function satiate(event, value) {
       localStorage.setItem('hunger', hunger)
       window.location.href = event.target.href
     }
-    else if (hunger <= 100) {
+    else if (hunger == 0) {
       alert('Ты уже сыт!')
+      setTimeout(() => {
+        window.location.replace('/story/50')
+        }, 0);
     }
-    else if (foods <= value && foods >= 0 && hunger != 0) {
+    else if (foods <= value && foods > 0 && hunger != 0) {
       foods = 0
       hunger -= 5
       alert('Ты собрала все свои припасы и с жадностью съела')
@@ -77,6 +89,9 @@ function satiate(event, value) {
     }
     else if (foods == 0) {
       alert('у тебя нет еды!')
+      setTimeout(() => {
+        window.location.replace('/story/50')
+        }, 0);
     }
     else {window.location.href = event.target.href}
   
@@ -115,6 +130,7 @@ function refreshData() {
     localStorage.setItem('places', JSON.stringify(places));
     localStorage.setItem('homeKey', JSON.stringify(home))
     localStorage.setItem('resources', JSON.stringify(window.resources))
+    localStorage.setItem('clothe_set', 'pink')
     localStorage.setItem('time', 9)
     localStorage.setItem('t_m', 0)
     localStorage.removeItem('enemy_name')
@@ -139,6 +155,15 @@ function time_go(value) {
     resolve(true)
   })
   
+}
+
+function wear(value) {
+  if (localStorage.getItem('clothe_set') == value) {
+    alert('Ты уже надела это!')
+  } else {
+    localStorage.setItem('clothe_set', value)
+    window.location.replace('/story/58')
+  }
 }
 
 function grab_finded() {
@@ -221,7 +246,9 @@ function e_encountZ(event, value) {
     }
   });
 }
+// Разработай систему динамического изменения картинки гардероба
 // TODO добей foods и hunger  
+// TODO реализовать Promises
 // TODO продумай логику захватов и плохих событий
 
 window.resources = []
@@ -267,3 +294,15 @@ function check_eRobber(value) {
       window.location.replace('/story/530');
   }, 500);}
 }
+
+
+document.querySelectorAll('a').forEach(link => {
+link.addEventListener('click', event => {
+  event.preventDefault();
+
+  // Задержка в 500 мс
+  setTimeout(() => {
+    window.location.href = link.getAttribute('href');
+  }, 150);
+});
+});

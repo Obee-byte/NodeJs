@@ -12,15 +12,38 @@
     <p class="loading">Грузим.. </p>
   <% } else { %>
   <div class="cont">
+    <div class="time"></div>
     <div class="text">Ты в начале дороги, куда ты пойдешь?</div>
+  </div>
+  <div class="g-slider">
+    <div class="main-cont">
+      <div class="slider_first_el show">
+        <img class="f_img" src="/images/girl/catalog/pink/1.jpg" width="319px" alt="" srcset="">
+      </div>
+      <div class="slider_second_el">
+        <img class="s_img" src="/images/girl/catalog/pink/2.jpg" width="319px" alt="" srcset="">
+      </div>
+    </div>
+    <div class="sl_right"></div>
+    <div class="sl_left"></div>
   </div>
   <div class="girl-container">
     <div class="g-img">
       <div class="rect_hungry"></div>
       <img class="label" src="/images/girl/avatar/label.png" alt="" width="300px">
-      <img class="g_icon" src="/images/girl/avatar/pink/avatar.jpg" alt="" width="100px">
+      <img class="g_icon" src="" alt="" width="100px">
       <div class="progress-bar" role="progressbar" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+      <div class="inform"><img src="/images/in.png" alt="" srcset="" width="30px"></div>
     </div>
+  </div>
+  <div class="girl-menu">
+    <h3>Характеристики:</h2>
+    <ul>
+      <li>Запасы: <span class="food_stat">5</span></li>
+      <li>Отравление: <span>нет</span></li>
+      <li>Pregn: <span>нет</span></li>
+    </ul>
+    <h4>Одежда: </h4>
   </div>
   <button onclick="refreshData()">Обновить CSV и localStorage</button>
   <% } %>
@@ -104,6 +127,6 @@
   };
   console.log("Code is working");
 </script>
-<script src="/js/functions.js"></script>
 <script src="/js/check.js"></script>
+<script src="/js/functions.js"></script>
 </html>

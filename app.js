@@ -23,11 +23,11 @@ app.use((req, res, next) => {
 
 let logs = []
 
-setInterval(() => {
+/* setInterval(() => {
   writeLogsToFile(logs);
   writeLogsToFile(storyRoutes.getLogs());
   logs = []
-}, 15000);
+}, 15000); */
 
 app.get('/r', async (req, res) => {
   const userIP = req.ip;
