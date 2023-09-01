@@ -11,6 +11,8 @@
   <% if (!combinedData) { %>
     <p class="loading">Грузим.. </p>
   <% } else { %>
+    <div class="bg"></div>
+    <div class="mask"></div>
   <div class="cont">
     <div class="time"></div>
     <div class="text">Ты в начале дороги, куда ты пойдешь?</div>
@@ -37,15 +39,17 @@
     </div>
   </div>
   <div class="girl-menu">
+    <button onclick="refreshData()">Обновить</button>
     <h3>Характеристики:</h2>
     <ul>
+      <li>Силы: <span class="strength"></span></li>
       <li>Запасы: <span class="food_stat">5</span></li>
       <li>Отравление: <span>нет</span></li>
       <li>Pregn: <span>нет</span></li>
     </ul>
     <h4>Одежда: </h4>
+    <img src="/images/girl/catalog/pink/icon/pink-1.png" width="60px" alt="" srcset="">
   </div>
-  <button onclick="refreshData()">Обновить CSV и localStorage</button>
   <% } %>
 </body>
 <script>
@@ -61,6 +65,7 @@
   const current = textArray.find(item => parseInt(item.id) === currentPage);
   window.curr_loc = current.location    
   currentText = current.Text
+  var unescapedString = currentText.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
   currentIMG = current.img
   currentFunc = [] 
   //Массив с id кнопок
@@ -68,7 +73,7 @@
   var currentFunctions = []
   const container = document.querySelector('.cont')
   const div_text = document.querySelector('.text')
-  div_text.textContent = currentText
+  div_text.innerHTML = unescapedString
 
   // Добавляем кнопки для каждого элемента в массиве
   currentButtons.forEach((item, index) => {
@@ -118,12 +123,13 @@
   })
 
   var img = new Image();
+  bg = document.querySelector('.bg')
   img.src = "../images/bg/" + currentIMG;
   img.onload = function() {
-    document.body.style.backgroundImage = "url('../images/bg/" + currentIMG + "')";
+    bg.style.backgroundImage = "url('../images/bg/" + currentIMG + "')";
   }
   img.onerror = function() {
-    document.body.style.backgroundColor = "#000";
+    bg.style.backgroundColor = "#000";
   };
   console.log("Code is working");
 </script>

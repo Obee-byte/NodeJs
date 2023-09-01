@@ -3,6 +3,7 @@ console.log("Текущий размер localStorage:", currentSize/1024, "Kbyt
 
 health = parseInt(localStorage.getItem('health'))
 lust = parseInt(localStorage.getItem('lust'))
+strength = parseInt(localStorage.getItem('strength'))
 hunger = parseFloat(localStorage.getItem('hunger'))
 console.log("hunger:", hunger)
 currtime = parseFloat(localStorage.getItem('time'))
@@ -118,11 +119,13 @@ function healHP(value) {
 function refreshData() {
     localStorage.setItem('health', '100')
     localStorage.setItem('lust', '0')
+    localStorage.setItem('strength', '100')
     localStorage.setItem('hunger', 0)
     localStorage.setItem('foods', 0)
     home = {'door_event': true, 'window_event': true}
     places = [
       { type: 'supermarket', capacity: 1400, items: ['scotch', 'vine', 'apples'] },
+      { type: 'b-market', capacity: 200, items: [] },
       { type: 'store', capacity: 700, items: ['scotch', 'cherry'] },
       { type: 'trash', capacity: 2500, items: ['scotch', 'wood1', 'bolts1'] }
     ]
@@ -138,6 +141,7 @@ function refreshData() {
       .then(response => {
         if (response.ok) {
           console.log('Data successfully refreshed');
+          
         } else {
           console.error('Error refreshing data');
         }
@@ -145,6 +149,7 @@ function refreshData() {
       .catch(error => {
         console.error('Error:', error);
       });
+      // window.location.replace('/story/1')
   }
 function time_go(value) {
   new Promise (resolve =>{
@@ -180,6 +185,16 @@ function grab_finded() {
     }
     resolve(true)
   })
+}
+
+function tryy(param, anys, href) {
+  params = parseFloat(param)
+  random = Math.random()
+  if (params >= random) {
+    anys()
+    window.location.replace('/story/105')
+  }
+  else {}
 }
 
 var storedPlaces = localStorage.getItem('places');
@@ -247,8 +262,8 @@ function e_encountZ(event, value) {
   });
 }
 // Разработай систему динамического изменения картинки гардероба
-// TODO добей foods и hunger  
-// TODO реализовать Promises
+// Начни сюжет с Авазы
+// добавь особые предметы и достижения
 // TODO продумай логику захватов и плохих событий
 
 window.resources = []
@@ -299,10 +314,12 @@ function check_eRobber(value) {
 document.querySelectorAll('a').forEach(link => {
 link.addEventListener('click', event => {
   event.preventDefault();
-
+  mask.classList.remove('hide')
+  mask.classList.remove('anim_out')
   // Задержка в 500 мс
   setTimeout(() => {
+    
     window.location.href = link.getAttribute('href');
-  }, 150);
+  }, 300);
 });
 });
