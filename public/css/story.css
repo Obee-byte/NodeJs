@@ -30,6 +30,8 @@ body {
   position: relative;
   margin-left: 136px;
   margin-top: -90px;
+  filter: saturate(1.2);
+
 }
 .g-red {color: red}.g-green {color: rgb(13, 217, 98)}
 .g-meek {color:#e55aea}.g-bratty {color: #9e6009}
@@ -37,6 +39,10 @@ body {
 span {
   margin-bottom: 15px;
   font-size: 12pt;}
+
+.clothe_d:hover {
+  scale: 2;
+}
 
 button {
   position: relative;
@@ -56,7 +62,7 @@ button {
   height: 100%;
 }
 .mask.anim_out{
-  transition: all 1.8s ease-in;
+  transition: all 1.2s ease-in;
   opacity: 0;
 }
 .mask.hide {
@@ -120,6 +126,7 @@ a:active {
 .g_icon {
   border-radius: 50%;
   position: relative;
+  top: -3px;
   z-index: 100;
   float: left;}
 .name {
@@ -210,13 +217,13 @@ ul {
   transform: translate(0px, 0);
 }
 
-.slider_second_el{
+.slider_second_el, .slider_third_el{
   position: relative;
   margin-top: -420px;
   transition: all 0.8s ease-in-out;
   transform: translate(340px, 0);
 }
-.slider_second_el.show{
+.slider_second_el.show, .slider_third_el.show{
   transition: all 0.8s ease-in-out;
   transform: translate(0px, 0);
 }

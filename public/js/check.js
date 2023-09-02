@@ -7,11 +7,15 @@ setTimeout(() => {
   g_slider = document.querySelector('.g-slider')
   sl_right = document.querySelector('.sl_right')
   sl_left = document.querySelector('.sl_left')
+  clothe_status = parseInt(localStorage.getItem('clothe_status'))
+  clothe_display = document.querySelector('.clothe_d')
   strength_stat = document.querySelector('.strength')
   slider_first_el = document.querySelector('.slider_first_el')
   slider_second_el = document.querySelector('.slider_second_el')
+  slider_third_el = document.querySelector('.slider_third_el')
   f_img = document.querySelector('.f_img')
   s_img = document.querySelector('.s_img')
+  t_img = document.querySelector('.t_img')
   let isAct = false;
   let isSlideShown = false
   let curr_slide = 1
@@ -56,11 +60,11 @@ setTimeout(() => {
   health = parseInt(localStorage.getItem('health'))
   food_stat = document.querySelector('.food_stat')
   parsedFood = parseInt(localStorage.getItem('foods'))
-  if (parsedFood >= 200) {food_stat.innerHTML = 'Очень много припасов'}
+  if (parsedFood >= 200) {food_stat.innerHTML = '<span class="g-green">Очень много припасов</span>'}
   else if (parsedFood >= 100){food_stat.innerHTML = 'На 2 дня'}
   else if (parsedFood >= 70){food_stat.innerHTML = '<span class="g-danger">Средне</span>'}
   else if (parsedFood >= 30){food_stat.innerHTML = '<span class="g-danger">Очень мало</span>'}
-  else if (parsedFood > 0){food_stat.innerHTML = 'Только закуска'}
+  else if (parsedFood > 0){food_stat.innerHTML = '<span class="g-red">Закуска</span>'}
   else {food_stat.innerHTML = '<span class="g-red">Нет</span>'}
 
   strength = parseInt(localStorage.getItem('strength'))
@@ -68,20 +72,25 @@ setTimeout(() => {
     strength_stat.innerHTML = '<span class="g-green">Полна энергии!</span>'
   }
   else if (strength >= 40) {
-    strength_stat.textContent = '<span class="g-danger">В норме</span>'
+    strength_stat.innerHTML = '<span class="g-danger">В норме</span>'
   }
   else {
-    strength_stat.textContent = '<span class="g-red">Ты устала</span>'
+    strength_stat.innerHTML = '<span class="g-red">Ты устала</span>'
   }
-  
-
+  //  Проверка на одежду
   clothe_set = localStorage.getItem('clothe_set')
   var curr_clothe_set = clothe_set ? clothe_set : 'pink';
+  // curr_clothe_set = 'hazel'
 
+  cl_path = '/images/girl/catalog/' + curr_clothe_set + '/icon/'+curr_clothe_set+'-'
+  clothe_display.setAttribute('src', cl_path+clothe_status+'.png')
+  
   string_f = f_img.getAttribute('src').replace('pink', curr_clothe_set)
   f_img.setAttribute('src', string_f)
   string_s = s_img.getAttribute('src').replace('pink', curr_clothe_set)
   s_img.setAttribute('src', string_s)
+  string_t = t_img.getAttribute('src').replace('pink', curr_clothe_set)
+  t_img.setAttribute('src', string_t)
 
   g_icon = document.querySelector('.g_icon')
   icon_path = '/images/girl/avatar/'
@@ -98,12 +107,17 @@ setTimeout(() => {
     } else {g_slider.classList.remove('show');isSlideShown = false}
   }
   function toggleSlide() {
-    if (curr_slide >= 2) {
+    if (curr_slide === 3) {
       slider_first_el.classList.add('show')
+      slider_third_el.classList.remove('show')
+      curr_slide = 1
+    }
+    else if (curr_slide === 2) {
       slider_second_el.classList.remove('show')
-      curr_slide--
+      slider_third_el.classList.add('show')
+      curr_slide++
       
-    } else if (curr_slide == 1) {
+    } else if (curr_slide === 1) {
       slider_second_el.classList.add('show')
       slider_first_el.classList.remove('show')
       curr_slide++
@@ -127,11 +141,9 @@ setTimeout(() => {
   }
   }, 100)
 
-
 setTimeout(() => {
   mask.classList.add('anim_out')
   setTimeout(() => {
     mask.classList.add('hide')
-  }, 1800);
+  }, 1200);
 }, 300);
-

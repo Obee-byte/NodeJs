@@ -5,10 +5,10 @@ health = parseInt(localStorage.getItem('health'))
 lust = parseInt(localStorage.getItem('lust'))
 strength = parseInt(localStorage.getItem('strength'))
 hunger = parseFloat(localStorage.getItem('hunger'))
-console.log("hunger:", hunger)
 currtime = parseFloat(localStorage.getItem('time'))
 time_multiplier = parseFloat(localStorage.getItem('t_m'))
-console.log("currtime:", currtime)
+clothe_status = parseInt(localStorage.getItem('clothe_status'))
+grabStatus = localStorage.getItem('grabStatus')
 
 let stHome_event = localStorage.getItem('homeKey');
 let home_e = JSON.parse(stHome_event);
@@ -16,10 +16,10 @@ let home_e = JSON.parse(stHome_event);
 resources_l = localStorage.getItem('resources')
 window.resources = JSON.parse(resources_l)
 
-if (health <= 0) {
+/* if (health <= 0) {
   alert('Ты вырубилась!')
-
-}
+  health= 100
+} */
 if (currtime > 24) {
   currtime = 0
 }
@@ -48,15 +48,74 @@ if (hunger > 100) {
 
 const enemies = window.enemies;
 getEnem = localStorage.getItem('enemy_name')
+console.log(enemies);
+
 
 if (!getEnem) {
-  getEnem = 'Простачок'
+  getEnem = 'Зомбак'
 }
 else {
   textElement = document.querySelector('.text')
-  newText = textElement.textContent.replace('snames', getEnem)
-  textElement.textContent = newText
+  content = textElement.textContent
+  if (content.includes('snames')) {
+    newText = textElement.textContent.replace('snames', getEnem)
+    textElement.textContent = newText
+  }
 }
+
+curr_enem = enemies.find(obj => obj.name === getEnem)
+max_en_lust = curr_enem ? curr_enem.lust : undefined;
+max_en_health = curr_enem ? curr_enem.health : undefined;
+en_health = parseInt(localStorage.getItem('en_health'))
+console.log("en_health:", en_health)
+en_lust = parseInt(localStorage.getItem('en_lust'))
+console.log("en_lust:", en_lust)
+console.log(max_en_health)
+
+if (en_health >= parseInt(max_en_health)) {
+  localStorage.setItem('en_health', 0)
+  localStorage.setItem('en_lust', 0)
+  window.location.replace('/story/5050')
+}
+
+if (en_lust >= parseInt(max_en_lust)) {
+  localStorage.setItem('en_health', 0)
+  localStorage.setItem('en_lust', 0)
+  window.location.replace('/story/5051')
+}
+
+if(grabStatus!='false' && strength <= 0) {
+  alert('Ты не смогла устоять!')
+  grabStatus = 'false'
+  strength = 15
+  localStorage.setItem('strength', strength)
+  localStorage.setItem('grabStatus', grabStatus)
+  window.location.replace('/story/400')
+}
+
+function attack(value){
+  en_health += value
+  localStorage.setItem('en_health', en_health)
+}
+
+function satisfy(value) {
+  en_lust += value
+  localStorage.setItem('en_lust', en_lust)
+}
+clothe_status = 2
+function choosePose() {
+  num = Math.random()
+  if (clothe_status == 3) {
+    window.location.replace('/story/5060')
+  }
+  else if (num >= 0.5) {
+    window.location.replace('/story/5070')
+  }
+  else {
+    window.location.replace('/story/5080')
+  }
+}
+
 function satiate(event, value) {
   event.preventDefault()
     if (hunger < 0) {
@@ -122,10 +181,15 @@ function refreshData() {
     localStorage.setItem('strength', '100')
     localStorage.setItem('hunger', 0)
     localStorage.setItem('foods', 0)
+    localStorage.setItem('clothe_status', 1)
+    localStorage.setItem('grabStatus', false)
+    localStorage.setItem('en_lust', 0)
+    localStorage.setItem('en_health', 0)
     home = {'door_event': true, 'window_event': true}
     places = [
       { type: 'supermarket', capacity: 1400, items: ['scotch', 'vine', 'apples'] },
       { type: 'b-market', capacity: 200, items: [] },
+      { type: 'b-sklad', capacity: 0, items: ['koleso'] },
       { type: 'store', capacity: 700, items: ['scotch', 'cherry'] },
       { type: 'trash', capacity: 2500, items: ['scotch', 'wood1', 'bolts1'] }
     ]
@@ -162,6 +226,16 @@ function time_go(value) {
   
 }
 
+function decreaseFood(value) {
+  foods -= value
+  localStorage.setItem('foods', foods)
+}
+
+function minusStrength(value) {
+  strength -=value
+  localStorage.setItem('strength', strength)
+}
+
 function wear(value) {
   if (localStorage.getItem('clothe_set') == value) {
     alert('Ты уже надела это!')
@@ -188,11 +262,12 @@ function grab_finded() {
 }
 
 function tryy(param, anys, href) {
+  val = parseInt(href)
   params = parseFloat(param)
   random = Math.random()
   if (params >= random) {
     anys()
-    window.location.replace('/story/105')
+    window.location.replace('/story/'+val)
   }
   else {}
 }
@@ -238,36 +313,33 @@ function try_find(place, v_item, random, link) {
 
 }
 
-function e_encountZ(event, value) {
-
-  return new Promise(resolve => {
-    randomNum = Math.random();
+function e_encountZ(value) {
     let foundEnemy = true; // Флаг, указывающий, был ли найден враг
 
     enemies.forEach(el => {
-      if (parseFloat(el.random*value) > randomNum) {
+      if (!foundEnemy) {
+        return; // Если уже найден враг, прекратить перебор
+      }
+      randomNum = Math.random();
+      if (parseFloat(el.random*(parseFloat(value))) > randomNum) {
         foundEnemy = false;
-        localStorage.setItem('enemy_name', el.name)         
+        localStorage.setItem('enemy_name', el.name)
       }
     });
     if (!foundEnemy) {
       setTimeout(() => {
-        alert('I must work!!')
-        window.location.href = "/story/101";
-        resolve(false); // Предотвращение перехода по ссылке /2
+        window.location.replace('/story/5001')
       }, 0);
     } else {
-      resolve(true); // Разрешение перехода по ссылке /2
     }
-  });
-}
+  }
 // Разработай систему динамического изменения картинки гардероба
 // Начни сюжет с Авазы
 // добавь особые предметы и достижения
 // TODO продумай логику захватов и плохих событий
 
 window.resources = []
-window.stringsToCheck = ["scotch", "wood1", "hammer", "wood2", "bolts1", "bolts2"]
+window.stringsToCheck = ["koleso", "rama", "seat", "koleso2", "cepocka", "pedal"]
 function repair_d() {
   allHave = true
   return new Promise(resolve => {
@@ -310,6 +382,30 @@ function check_eRobber(value) {
   }, 500);}
 }
 
+function clothe_remove() {
+  setGrab(true)
+  if (clothe_status > 2) {
+    clothe_status -= 2
+    localStorage.setItem('clothe_status', clothe_status)
+  }
+  else if (clothe_status != 0){
+    clothe_status -= 1
+    localStorage.setItem('clothe_status', clothe_status)
+  }
+  else {
+    decreaseHP(10)
+  }
+  decreaseHP(5)
+  }
+  
+function setGrab(bool) {
+  if(bool) {
+    grabStatus = 'true'
+    localStorage.setItem('grabStatus', 'true')
+  }
+  else{grabStatus = 'false';localStorage.setItem('grabStatus', 'false')}
+}
+
 
 document.querySelectorAll('a').forEach(link => {
 link.addEventListener('click', event => {
@@ -320,6 +416,6 @@ link.addEventListener('click', event => {
   setTimeout(() => {
     
     window.location.href = link.getAttribute('href');
-  }, 300);
+  }, 500);
 });
 });
