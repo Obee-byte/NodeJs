@@ -28,8 +28,6 @@ body {
 }
 .girl-menu img {
   position: relative;
-  margin-left: 136px;
-  margin-top: -90px;
   filter: saturate(1.2);
 
 }
@@ -40,8 +38,45 @@ span {
   margin-bottom: 15px;
   font-size: 12pt;}
 
-.clothe_d:hover {
-  scale: 2;
+  .g-stat:hover {
+  scale: 3;
+  margin-top: 50px !important;
+}
+
+.g-stat {
+  width: 70px;
+  height: 147px;
+  margin-top: -113px;
+  margin-left: 133px;
+}
+.belly {
+  width: 18px;
+  position: absolute !important;
+  z-index: 1100;
+  display: none;
+  margin-left: 21px !important;
+  margin-top: 57px !important;
+}
+.decay {
+  width: 18px;
+  position: absolute !important;
+  z-index: 1100;
+  display: none;
+  margin-left: 20px !important;
+  margin-top: 26px !important;
+}
+.soaks {
+  width: 17px;
+  z-index: 1100;
+  display: none;
+  position: absolute !important;
+  margin-left: 21.5px !important;
+  margin-top: 75px !important;
+  filter: saturate(1.2);
+}
+
+.soaks.show, .belly.show, .decay.show {
+  display: block;
 }
 
 button {
@@ -125,6 +160,7 @@ a:active {
 
 .g_icon {
   border-radius: 50%;
+  animation: lust-glow 2s infinite;
   position: relative;
   top: -3px;
   z-index: 100;
@@ -221,7 +257,7 @@ ul {
   position: relative;
   margin-top: -420px;
   transition: all 0.8s ease-in-out;
-  transform: translate(340px, 0);
+  transform: translate(370px, 0);
 }
 .slider_second_el.show, .slider_third_el.show{
   transition: all 0.8s ease-in-out;
@@ -241,6 +277,12 @@ ul {
   /* background-color: aqua; */
   width: 50px;
   height: 460px;
+}
+
+@keyframes lust-glow {
+  0% {box-shadow: 0 0 0 2px #e55aea;}
+  50% {box-shadow: 0 0 var(--lust) var(--blur) #e55aea;}
+  100% {box-shadow: 0 0 0 2px #e55aea;}
 }
 
 .progress-bar {

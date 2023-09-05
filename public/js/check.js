@@ -13,9 +13,19 @@ setTimeout(() => {
   slider_first_el = document.querySelector('.slider_first_el')
   slider_second_el = document.querySelector('.slider_second_el')
   slider_third_el = document.querySelector('.slider_third_el')
+  decay_display = document.querySelector('.decay')
+  soaks = document.querySelector('.soaks')
+  belly = document.querySelector('.belly')
+  pregnant = parseInt(localStorage.getItem('pregnancy'))
+  lust = parseInt(localStorage.getItem('lust'))
+  
+  pregn = document.querySelector('.pregn')
   f_img = document.querySelector('.f_img')
   s_img = document.querySelector('.s_img')
   t_img = document.querySelector('.t_img')
+  decay_status = parseInt(localStorage.getItem('decay_status'))
+  console.log("setTimeout  decay_status:", decay_status)
+  dec_stat = document.querySelector('.dec_stat')
   let isAct = false;
   let isSlideShown = false
   let curr_slide = 1
@@ -77,10 +87,34 @@ setTimeout(() => {
   else {
     strength_stat.innerHTML = '<span class="g-red">Ты устала</span>'
   }
+  if (decay_status >= 50) {
+    dec_stat.innerHTML = '<span class="g-red">Сильное</span>'
+    decay_display.classList.add('show')
+  }
+  else if (decay_status >= 20) {
+    dec_stat.innerHTML = '<span class="g-danger">Угроза!</span>'
+    decay_display.classList.add('show')
+  }
+  else if (decay_status == 0) {
+    dec_stat.innerHTML = '<span class="g-green">Нет</span>'
+  }
+  else if (decay_status < 20) {
+    dec_stat.innerHTML = '<span class="g-danger">Немного</span>'
+  }
+
+  if (pregnant >= 1) {
+    pregn.innerHTML = '<span class="g-meek">В положении</span>'
+    belly.classList.add('show')
+  }
+  else {
+    pregn.innerHTML = '<span class="g-green">Нет</span>'
+  }
+  
+
   //  Проверка на одежду
   clothe_set = localStorage.getItem('clothe_set')
-  var curr_clothe_set = clothe_set ? clothe_set : 'pink';
-  // curr_clothe_set = 'hazel'
+  // var curr_clothe_set = clothe_set ? clothe_set : 'pink';
+  curr_clothe_set = 'hazel'
 
   cl_path = '/images/girl/catalog/' + curr_clothe_set + '/icon/'+curr_clothe_set+'-'
   clothe_display.setAttribute('src', cl_path+clothe_status+'.png')
@@ -99,6 +133,13 @@ setTimeout(() => {
   sl_left.addEventListener('click', toggleSlide)
   sl_right.addEventListener('click', toggleSlide)
 
+  g_icon.style.setProperty('--lust', lust+'px')
+  if (lust<=0) {
+    g_icon.style.setProperty('--blur', '0')
+  }
+  else if (lust>=50){g_icon.style.setProperty('--blur', '20px')}
+  else{g_icon.style.setProperty('--blur', '3px')}
+  
   function toggleSlider() {
     if (!isSlideShown) {
       g_slider.classList.add('show')

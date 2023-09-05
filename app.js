@@ -5,6 +5,7 @@ const csvReader = require('./server/csv_reader');
 const app = express();
 
 const storyRoutes = require('./server/routes/story')
+const spremeRoutes = require('./server/routes/spreme')
 
 app.set('view engine', 'ejs')
 
@@ -50,6 +51,7 @@ app.get('/r', async (req, res) => {
 });
 
 app.use('/story', storyRoutes.router)
+app.use('/spreme', spremeRoutes.router)
 
 app.use((req, res, next) => {
   id = req.url

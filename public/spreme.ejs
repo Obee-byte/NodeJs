@@ -1,0 +1,120 @@
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spreme game</title>
+</head>
+<body>
+    <style>
+        body {
+        background-color: rgb(79, 79, 60);
+        font-family: Verdana;}
+        .container {
+            position: relative;
+            height: 400px;
+            border: 1px solid #ccc;
+            overflow: hidden;
+        }
+        .block {
+            position: absolute;
+            width: 40px;
+            margin-top: -50px;
+            height: 40px;
+            background-color: red;
+        }
+        .hide {
+            display: none;
+        }
+        .bg {
+        background-image: url('');
+        position: fixed;
+        width: 100%;
+        margin-top: -53px;
+        margin-left: -5px;
+        height: 100%;
+        z-index: -100;
+        background-color: bisque;
+        }
+        .animate-class {
+            animation-name: fall;
+            animation-duration: var(--speed);
+        }
+        @keyframes fall {
+            0% {
+                transform: translate();
+            }
+            100% {
+                transform: translate(0, 500px);
+            }
+        }
+    </style>
+    <div class="container">
+
+    </div>
+    <div class="text">0</div>
+    <div class="oao">0</div>
+
+    <script>
+        combinedData = `<%= JSON.stringify(combinedData) %>`
+        var newStr = combinedData.replace(/\n/g, '');
+        var str_res = newStr.replace(/&#34;/g, '"')
+        const jsonArray = JSON.parse(str_res);
+        const cumLoad = parseInt(jsonArray[0])
+        const difficult = parseInt(jsonArray[1])
+        console.log(difficult);
+        conlo = document.querySelector('.text')
+        oao = document.querySelector('.oao')
+        m=0
+        index= 0
+        passed=0
+        catched = 0
+        function createElement(param) {
+            if (m >= cumLoad/3) {
+                clearInterval(intervalId)
+                randomnum = Math.random()
+                value = passed/100
+                if (value>=randomnum) {
+                    alert('Залетела!')
+                    setTimeout(()=>{
+                        window.location.replace('/story/5055')
+                    }, 2000)
+                }
+                else{alert('Ты везунчик');window.location.replace('/story/5056')}
+            }
+            parsed = parseInt(conlo.textContent)
+            parsed_oao = parseInt(oao.textContent)
+            container = document.querySelector('.container')
+            block = document.createElement('div')
+            child = document.querySelectorAll('.block')
+            
+            child.forEach(el => {
+                el.style.setProperty('--speed', difficult+'s');
+                el.addEventListener('click', ()=>{
+                    el.removeEventListener('click', this)
+                    el.classList.add('hide')
+                    conlo.textContent = parsed+=1
+                }, {once:true})
+            });
+            block.classList.add('block')
+            randomX = Math.floor(Math.random()*(container.offsetWidth - 50))
+            block.style.left = randomX + 'px'
+            container.appendChild(block)
+            if (child.length != 0) {
+                child[index].classList.add('animate-class')
+                index++
+            }
+            setTimeout(()=>{
+                if (!child[0].classList.contains('hide')) {
+                    oao.textContent = parsed_oao+=1
+                    passed++;
+                }
+                else{catched++}
+                container.removeChild(child[0])
+                index--
+                m++
+            }, ((difficult*1000)+500))
+        }
+        intervalId = setInterval(createElement, 400);
+    </script>
+</body>
+</html>
