@@ -19,6 +19,8 @@ setTimeout(() => {
   pregnant = parseInt(localStorage.getItem('pregnancy'))
   lust = parseInt(localStorage.getItem('lust'))
   
+  const progressBar = document.querySelector('.progress-bar');
+  
   pregn = document.querySelector('.pregn')
   f_img = document.querySelector('.f_img')
   s_img = document.querySelector('.s_img')
@@ -26,6 +28,7 @@ setTimeout(() => {
   decay_status = parseInt(localStorage.getItem('decay_status'))
   console.log("setTimeout  decay_status:", decay_status)
   dec_stat = document.querySelector('.dec_stat')
+  dec_disp_1 = document.querySelector('.decay-')
   let isAct = false;
   let isSlideShown = false
   let curr_slide = 1
@@ -63,7 +66,6 @@ setTimeout(() => {
                   el.textContent = (parseFloat(match[0]) * 100) + '% найти ' + window.stringsToCheck[j];
                   break;}}}}})
   function updateProgressBar(percent) {
-    const progressBar = document.querySelector('.progress-bar');
     progressBar.style.setProperty('--progress-percent', percent+'%');
   }
   
@@ -81,15 +83,19 @@ setTimeout(() => {
   if (strength >= 100) {
     strength_stat.innerHTML = '<span class="g-green">Полна энергии!</span>'
   }
-  else if (strength >= 40) {
-    strength_stat.innerHTML = '<span class="g-danger">В норме</span>'
+  else if (strength >= 50) {
+    strength_stat.innerHTML = '<span class="g-green">В норме</span>'
+  }
+  else if (strength >= 35 && strength < 50) {
+    strength_stat.innerHTML = '<span class="g-danger">Истощена</span>'
   }
   else {
-    strength_stat.innerHTML = '<span class="g-red">Ты устала</span>'
+    strength_stat.innerHTML = '<span class="g-red">Вырубаешься</span>'
   }
   if (decay_status >= 50) {
     dec_stat.innerHTML = '<span class="g-red">Сильное</span>'
     decay_display.classList.add('show')
+    dec_disp_1.classList.add('show')
   }
   else if (decay_status >= 20) {
     dec_stat.innerHTML = '<span class="g-danger">Угроза!</span>'
@@ -113,8 +119,8 @@ setTimeout(() => {
 
   //  Проверка на одежду
   clothe_set = localStorage.getItem('clothe_set')
-  // var curr_clothe_set = clothe_set ? clothe_set : 'pink';
-  curr_clothe_set = 'hazel'
+  var curr_clothe_set = clothe_set ? clothe_set : 'pink';
+  // curr_clothe_set = 'hazel'
 
   cl_path = '/images/girl/catalog/' + curr_clothe_set + '/icon/'+curr_clothe_set+'-'
   clothe_display.setAttribute('src', cl_path+clothe_status+'.png')
@@ -135,10 +141,10 @@ setTimeout(() => {
 
   g_icon.style.setProperty('--lust', lust+'px')
   if (lust<=0) {
-    g_icon.style.setProperty('--blur', '0')
+    g_icon.style.setProperty('--blur', '2px')
   }
-  else if (lust>=50){g_icon.style.setProperty('--blur', '20px')}
-  else{g_icon.style.setProperty('--blur', '3px')}
+  else if (lust>=50){g_icon.style.setProperty('--blur', '20px');soaks.classList.add('show')}
+  else{g_icon.style.setProperty('--blur', '5px')}
   
   function toggleSlider() {
     if (!isSlideShown) {

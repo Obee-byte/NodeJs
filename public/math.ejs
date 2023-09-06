@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Math Game</title>
+</head>
+<body>
+    <!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Math Riddle</title>
+  <style>.container {
+    max-width: 400px;
+    margin: 0 auto;
+    text-align: center;
+    padding: 20px;
+  }
+  
+  h1 {
+    font-size: 24px;
+  }
+  
+  p {
+    font-size: 18px;
+  }
+  
+  input {
+    margin-top: 10px;
+    padding: 5px;
+    width: 100%;
+  }
+  
+  button {
+    margin-top: 10px;
+    padding: 10px 20px;
+  }
+  .progress-bar {
+  width: 100%;
+  border-radius: 50px;
+  overflow: hidden;
+  height: 20px;
+  background-color: #ddd;
+  /* background-color: #ffa200; */
+}
+
+.progress {
+  height: 100%;
+  background-color: #4CAF50;
+  width: 100%;
+  transition: all 1s ease-in;
+}
+  
+  #timer {
+    margin-top: 20px;
+  }</style>
+</head>
+<body>
+  <div class="container">
+    <h1>Math Riddle</h1>
+    <p id="expression"></p>
+    <input type="number" id="answer" placeholder="Введите ответ">
+    <button onclick="checkAnswer()">Подтвердить</button>
+    <p id="timer">Оставшееся время: <span id="time">5</span> сек</p>
+    <div class="progress-bar">
+        <div class="progress"></div>
+      </div>
+  </div>
+
+  <script>
+    combinedData = `<%= JSON.stringify(combinedData) %>`
+    var newStr = combinedData.replace(/\n/g, '');
+    var str_res = newStr.replace(/&#34;/g, '"')
+    const jsonArray = JSON.parse(str_res);
+    loseURL = parseInt(jsonArray[0])
+    winURL = parseInt(jsonArray[1])
+    maxiter = parseInt(jsonArray[2])
+    var iterations = 0
+  
+  // Генерация случайного числа в определенном диапазоне
+    function getRandomNumber(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    
+    // Генерация случайного математического выражения
+    function generateExpression() {
+      var number1 = getRandomNumber(5, 200);
+      var number2 = getRandomNumber(1, 100);
+      var number3 = getRandomNumber(2, 4);
+      var multiply = '*'
+      var operator = ['+', '-'][getRandomNumber(0, 1)];
+      if (number1 % number2 === 0) {} else{
+        while (number1 % number2 !== 0) {
+            number1 = getRandomNumber(5, 100);
+            var operator = ['+', '-'][getRandomNumber(0, 1)];
+        }
+        }
+        if (number1 == number2) {
+            while (number1 == number2) {
+                number2 = getRandomNumber(number1-2, 100);
+            }
+        }
+        if (number1<number2 && (operator == '-' || operator == '/')) {
+        while (number1<number2 && (operator == '-' || operator == '/')) {
+            number1 = getRandomNumber(1, 100);
+            var operator = ['+', '-'][getRandomNumber(0, 1)];
+        }
+      }
+
+      var expression = '('+number1 + ' ' + operator + ' ' + number2+')' + ' '+ multiply + ' '+number3;
+      return expression;
+    }
+    var totalTime = 35
+    var remainingTime = totalTime
+    var progressBar = document.querySelector('.progress');
+    function updateProgressBar() {
+        var progressWidth = (remainingTime / totalTime) * 100 + '%';
+        progressBar.style.width = progressWidth;
+    }
+    
+    // Проверка правильности ответа
+    function checkAnswer() {
+      var expressionElement = document.getElementById('expression');
+      var answerElement = document.getElementById('answer');
+      var timerElement = document.getElementById('time');
+      var expression = expressionElement.textContent;
+      var answer = answerElement.value;
+    
+      if (eval(expression) === parseInt(answer)) {
+        alert('Получилось!')
+        iterations++
+        if (iterations >= maxiter) {
+            window.location.replace('/story/'+winURL)
+        }
+        remainingTime = totalTime
+        clearInterval(timerInterval)
+        resetGame();
+      } else {
+        answerElement.value = '';
+        timerElement.textContent = parseInt(timerElement.textContent)-5
+        remainingTime-= 5
+        updateProgressBar()
+      }
+    }
+    
+    // Обновление времени на таймере
+    function updateTimer() {
+      var timerElement = document.getElementById('time');
+      var time = parseInt(timerElement.textContent);
+      remainingTime-= 1
+      if (time <= 20) {
+        progressBar.style = 'background-color: #ffa200';
+      }
+      if (time <= 10) {
+        progressBar.style = 'background-color: #ff0000';
+      }
+      else if(time >= 20){progressBar.style = 'background-color: #4CAF50';}
+      updateProgressBar()
+      if (time > 0) {
+        timerElement.textContent = time - 1;
+      } else {
+        clearInterval(timerInterval);
+        alert('Проиграла!');
+        window.location.replace('/story/'+loseURL)
+      }
+    }
+    
+    // Сброс игры
+    function resetGame() {
+      var expressionElement = document.getElementById('expression');
+      var answerElement = document.getElementById('answer');
+      var timerElement = document.getElementById('time');
+    
+      expressionElement.textContent = generateExpression();
+      answerElement.value = '';
+      progressBar.style.width = '100%'
+      timerElement.textContent = '35';
+      timerInterval = setInterval(updateTimer, 1000);
+    }
+    
+    // Запуск игры при загрузке страницы
+    window.onload = function() {
+      resetGame();
+    };</script>
+</body>
+</html>
+</body>
+</html>

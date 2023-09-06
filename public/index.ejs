@@ -55,6 +55,7 @@
       <img class="belly" src="/images/girl/belly.png" alt="" srcset="">
       <img class="soaks" src="/images/girl/soaks.png" alt="" srcset="">
       <img class="decay" src="/images/girl/Decay-2.png" alt="" srcset="">
+      <img class="decay-" src="/images/girl/decay-3.png" alt="" srcset="">
       <img class="clothe_d" src="/images/girl/catalog/pink/icon/pink-3.png" width="60px" alt="" srcset="">
     </div>
   </div>
@@ -72,6 +73,7 @@
   window.enemies = jsonArray[3];
   const current = textArray.find(item => parseInt(item.id) === currentPage);
   window.curr_loc = current.location    
+  window.curr_reg = current.region 
   currentText = current.Text
   var unescapedString = currentText.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
   currentIMG = current.img

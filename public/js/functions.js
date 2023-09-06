@@ -1,5 +1,6 @@
 var currentSize = JSON.stringify(localStorage).length;
 console.log("Текущий размер localStorage:", currentSize/1024, "Kbytes");
+var startTime = performance.now(); // Запоминаем начальное время
 
 health = parseInt(localStorage.getItem('health'))
 pregnant = parseInt(localStorage.getItem('pregnancy'))
@@ -12,10 +13,11 @@ time_multiplier = parseFloat(localStorage.getItem('t_m'))
 clothe_status = parseInt(localStorage.getItem('clothe_status'))
 grabStatus = localStorage.getItem('grabStatus')
 bufferUrl = localStorage.getItem('bufferUrl')
+count_enemy = localStorage.getItem('count_enemy')
 console.log("bufferUrl:", bufferUrl)
-console.log('shvatki is '+shvatki);
-if (shvatki <= 0) {
-  alert('удалил')
+
+if (shvatki <= 0 && pregnant !=0) {
+  alert('удалил схватки')
   pregnant = 0
   localStorage.setItem('pregnant', 0)
 }
@@ -52,7 +54,21 @@ if (health <= 0) {
   }
   // window.location.replace('/story/5100')
 }
-
+if(grabStatus!='false' && strength <= 0) {
+  alert('Ты не смогла устоять!')
+  setTimeout(()=>{
+    grabStatus = 'false'
+    strength = 15
+    localStorage.setItem('strength', strength)
+    localStorage.setItem('grabStatus', grabStatus)
+    if (window.curr_reg == 'double') {
+      window.location.replace('/story/51000')
+    }
+    else{window.location.replace('/story/400')}
+    
+  },0)
+}
+console.log('window.curr_reg is '+window.curr_reg);
 if (currtime > 24) {
   currtime = 0
 }
@@ -89,20 +105,27 @@ if (!getEnem) {
 }
 else {
   textElement = document.querySelector('.text')
-  content = textElement.textContent
+  content = textElement.innerHTML
   if (content.includes('snames')) {
     while (content.includes('snames')) {
-      newText = textElement.textContent.replace('snames', getEnem)
+      newText = textElement.innerHTML.replace('snames', '<strong class=g-zom>'+getEnem+'</strong>')
       textElement.innerHTML = newText
-      content = textElement.textContent
+      content = textElement.innerHTML
     }
   }
 }
 
 curr_enem = enemies.find(obj => obj.name === getEnem)
 max_en_lust = curr_enem ? curr_enem.lust : undefined;
+if (localStorage.getItem('max_en_lust')) {
+  max_en_lust = parseInt(localStorage.getItem('max_en_lust'))
+}
+console.log('type of max_en_lust is '+typeof(max_en_lust));
 max_en_health = curr_enem ? curr_enem.health : undefined;
 thrust = curr_enem ? curr_enem.thrust : 0.5;
+if (localStorage.getItem('thrust')) {
+  thrust = parseInt(localStorage.getItem('thrust'))
+}
 en_trust = parseFloat(thrust)
 
 en_health = parseInt(localStorage.getItem('en_health'))
@@ -110,13 +133,17 @@ en_lust = parseInt(localStorage.getItem('en_lust'))
 console.log(en_lust);
 
 function spremeGame() {
-  window.location.replace('/spreme/'+curr_enem.lust+'/4') //FIXME
+  window.location.replace('/spreme/'+max_en_lust+'/'+(5-count_enemy)) //FIXME
 }
+
+console.log('count_enemyis '+count_enemy);
 
 if (lust >= 100) {
   lust = 0
   localStorage.setItem('lust', lust)
-  en_lust -= 50
+  en_lust -= 30
+  strength -= 20
+  localStorage.setItem('strength', strength)
   localStorage.setItem('en_lust', en_lust)
   if (curr_loc == 'pussy') {
     window.location.replace('/story/5090')
@@ -127,7 +154,11 @@ if (lust >= 100) {
   else if (curr_loc == 'mouth') {
     window.location.replace('/story/5092')
   }
-  else{alert('Запорол lust, возможно с curr loc')}
+  
+  else if (curr_loc == 'dmouth') {window.location.replace('/story/5308')}
+  else if (curr_loc == 'dpussy') {window.location.replace('/story/5320')}
+  else if (curr_loc == 'dass') {window.location.replace('/story/5335')}
+  else{alert('Запорол lust, возможно с curr loc. Потому что не определен')}
 }
 
 if (en_health >= parseInt(max_en_health)) {
@@ -148,17 +179,14 @@ if (en_lust >= parseInt(max_en_lust)) {
   else if (window.curr_loc == 'mouth') {
     window.location.replace('/story/5053')
   } 
-  else{alert('Запорол конч врага, возможно с curr loc')}
+  else if (window.curr_loc == 'dmouth') {
+    window.location.replace('/story/5053')
+  } 
+  else if (curr_loc == 'dpussy') {window.location.replace('/story/5321')}
+  else if (curr_loc == 'dass') {window.location.replace('/story/5336')}
+  else{alert('Запорол конч врага, возможно нет curr loc для: ' + window.curr_loc)}
 }
 
-if(grabStatus!='false' && strength <= 0) {
-  alert('Ты не смогла устоять!')
-  grabStatus = 'false'
-  strength = 15
-  localStorage.setItem('strength', strength)
-  localStorage.setItem('grabStatus', grabStatus)
-  window.location.replace('/story/400')
-}
 if(window.curr_loc==='mouth') {
   rnum = Math.random()
   if (rnum <= 0.4) {
@@ -176,6 +204,8 @@ function attack(value){
   en_health += value
   localStorage.setItem('en_health', en_health)
 }
+console.log('en_health is '+en_health);
+console.log('strength is '+strength);
 
 function satisfy(value) {
   en_lust += value
@@ -183,19 +213,24 @@ function satisfy(value) {
 }
 
 function thrustS() {
-  if (window.curr_loc == 'ass') {
+  if (window.curr_loc == 'ass' || window.curr_loc == 'dass') {
     health -= en_trust
-    lust += (en_trust*10)
+    lust += (en_trust*5)
     localStorage.setItem('health', health)
     localStorage.setItem('lust', lust)
   }
-  else if (window.curr_loc == 'pussy') {
-    lust += (en_trust*7)
+  else if (window.curr_loc == 'pussy' || window.curr_loc == 'dpussy') {
+    lust += (en_trust*4)
+    localStorage.setItem('lust', lust)
+  }
+  else {
+    lust += (en_trust*2)
     localStorage.setItem('lust', lust)
   }
 }
 
 console.log('lust is ' +lust);
+console.log('en_trust is ' +en_trust);
 
 function incrStrength(value) {
   strength += value
@@ -213,7 +248,7 @@ function tryy(param, anys, href) {
   random = Math.random()
   if (params >= random) {
     anys()
-    alert("Тебя услышали!")
+    // alert("Тебя услышали!")
     window.location.replace('/story/'+val)
   }
   else {}
@@ -231,7 +266,7 @@ function choosePose() {
   else {
     window.location.replace('/story/5080')
   }
-}, 400)
+}, 200)
 }
 function increaseHunger(value) {
   hunger+=value
@@ -309,15 +344,34 @@ function healHP(value) {
 function urli() {
   window.location.replace(bufferUrl)
 }
+console.log('max_en_lust is: '+max_en_lust);
+
+function double(pose) {
+  max_en_lust = parseInt(max_en_lust)+100
+  localStorage.setItem('count_enemy', 2)
+  en_lust -= 30
+  thrust = (en_trust*2)
+  localStorage.setItem('thrust', thrust)
+  localStorage.setItem('max_en_lust', max_en_lust)
+  localStorage.setItem('en_lust', en_lust)
+  if (pose == 'mouth') {window.location.href = '/story/5301'}
+  else if (pose == 'pussy'){window.location.href = '/story/5310'}
+  else if (pose == 'ass'){window.location.href = '/story/50320'}
+  else{window.location.href = '/story/5330'}
+}
 
 function refreshData() {
+    localStorage.removeItem('max_en_lust')
+    localStorage.removeItem('thrust')
+    localStorage.setItem('count_enemy', 0)
     localStorage.setItem('buffer-clothe', 3)
     localStorage.setItem('health', '100')
     localStorage.setItem('pregnancy', 0)//Change!
-    localStorage.setItem('shvatki', 5)
+    localStorage.setItem('shvatki', 0)
     localStorage.setItem('lust', '0')
     localStorage.setItem('strength', '100')
     localStorage.setItem('hunger', 0)
+    // localStorage.setItem('max_en_lust', 50)
     localStorage.setItem('foods', 0)
     localStorage.setItem('clothe_status', 3)
     localStorage.setItem('grabStatus', false)
@@ -358,15 +412,15 @@ function refreshData() {
 function time_go(value) {
   new Promise (resolve =>{
     if (decay_status > 0 && decay_status >= value) {
-      health -= value
-      hunger += (value*2)
+      health -= (value/2)
+      hunger += (value*1.5)
       decay_status -= value
       localStorage.setItem('health', health)
       localStorage.setItem('hunger', hunger)
       localStorage.setItem('decay_status', decay_status)
     }
     else if (decay_status > 0 && decay_status < value){
-      health -= decay_status
+      health -= (decay_status/2)
       decay_status = 0 
       localStorage.setItem('health', health)
       localStorage.setItem('decay_status', decay_status)
@@ -415,12 +469,13 @@ function strip() {
 
 function getpregnant() {
   alert('work')
-  shvatki=3
+  shvatki+=3
   pregnant = 1
   localStorage.setItem('pregnancy', 1)
   localStorage.setItem('shvatki', shvatki)
   
 }
+console.log('shvatki is '+shvatki);
 
 function wearBuf() {
   bufferClothe = localStorage.getItem('buffer-clothe')
@@ -486,6 +541,10 @@ function try_find(place, v_item, random, link) {
 
 }
 
+function mathGame(loseURL, winURl, iter, func=()=>{}) {
+  func()
+  window.location.replace('/math/'+loseURL+'/'+winURl+'/'+iter)
+}
 function e_encountZ(value) {
     let foundEnemy = true; // Флаг, указывающий, был ли найден враг
 
@@ -503,6 +562,7 @@ function e_encountZ(value) {
       setTimeout(() => {
         bufferUrl = window.location.href;
         localStorage.setItem('bufferUrl', bufferUrl)
+        localStorage.setItem('count_enemy', 1)
         window.location.replace('/story/5001')
       }, 0);
     } else {
@@ -578,7 +638,8 @@ function setGrab(bool) {
     grabStatus = 'true'
     localStorage.setItem('grabStatus', 'true')
   }
-  else{grabStatus = 'false';localStorage.setItem('grabStatus', 'false')}
+  else{grabStatus = 'false';localStorage.setItem('grabStatus', 'false');localStorage.removeItem('max_en_lust')
+  localStorage.removeItem('thrust'),localStorage.setItem('count_enemy', 0)}
 }
 
 
@@ -594,3 +655,8 @@ link.addEventListener('click', event => {
   }, 500);
 });
 });
+
+var endTime = performance.now(); // Запоминаем конечное время
+
+var executionTime = endTime - startTime; // Вычисляем время выполнения
+console.log('Время выполнения кода:', parseFloat(executionTime).toFixed(1), 'мс');

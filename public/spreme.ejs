@@ -7,24 +7,27 @@
 <body>
     <style>
         body {
-        background-color: rgb(79, 79, 60);
-        font-family: Verdana;}
+        background-image:url(/images/bg/Liza-1.jpg);
+        /* backdrop-filter: blur(5px); */
+        font-family: Verdana;
+    color: #ccc;}
         .container {
             position: relative;
-            height: 400px;
+            height: 632px;
             border: 1px solid #ccc;
             overflow: hidden;
         }
         .block {
             position: absolute;
-            width: 40px;
+            width: 60px;
             margin-top: -50px;
             height: 40px;
-            background-color: red;
+            background-image:url('/images/bg/spr.png');
+            background-size: 60px 40px;
         }
         .hide {
             display: none;
-        }
+        }.sprem{color: white;}.lust{color: rgb(237, 153, 220);}.meek{color: rgb(197, 77, 227);}
         .bg {
         background-image: url('');
         position: fixed;
@@ -44,15 +47,18 @@
                 transform: translate();
             }
             100% {
-                transform: translate(0, 500px);
+                transform: translate(0, 700px);
             }
         }
+        .waters img{position: absolute;bottom: 98px;left: 159px;width: 173px;filter: blur(2px);mix-blend-mode: multiply;opacity: var(--soaks);}
     </style>
+    <div class="waters"><img class="soaks" src="/images/bg/water.png" alt=""></div>
     <div class="container">
 
     </div>
     <div class="text">0</div>
     <div class="oao">0</div>
+    <div class="pussy-info">Увлажненная</div>
 
     <script>
         combinedData = `<%= JSON.stringify(combinedData) %>`
@@ -64,25 +70,40 @@
         console.log(difficult);
         conlo = document.querySelector('.text')
         oao = document.querySelector('.oao')
+        puss = document.querySelector('.pussy-info')
+        soaks = document.querySelector('.soaks')
         m=0
         index= 0
         passed=0
         catched = 0
         function createElement(param) {
+            if (passed>=10) {
+                soaks.style.setProperty('--soaks',(passed/100))
+            }
+            else{soaks.style.setProperty('--soaks',0)}
             if (m >= cumLoad/3) {
                 clearInterval(intervalId)
                 randomnum = Math.random()
-                value = passed/100
+                value = (passed/100)*1.2
                 if (value>=randomnum) {
                     alert('Залетела!')
                     setTimeout(()=>{
                         window.location.replace('/story/5055')
                     }, 2000)
                 }
-                else{alert('Ты везунчик');window.location.replace('/story/5056')}
+                else{alert('Ты везунчик, несмотря на то что у тебя '+puss.textContent+' киска');window.location.replace('/story/5056')}
             }
             parsed = parseInt(conlo.textContent)
             parsed_oao = parseInt(oao.textContent)
+            if (parsed_oao >= 20 && parsed_oao < 50) {
+                puss.innerHTML = '<strong class="meek">мокрая</strong>'
+            }
+            else if (parsed_oao >= 50 && parsed_oao < 80) {
+                puss.innerHTML = '<strong class="lust">испачканная в сперме</strong>'
+            }
+            else if (parsed_oao >= 80) {
+                puss.innerHTML = '<strong class="sprem">вся залита спермой</strong>'
+            }
             container = document.querySelector('.container')
             block = document.createElement('div')
             child = document.querySelectorAll('.block')
@@ -97,6 +118,9 @@
             });
             block.classList.add('block')
             randomX = Math.floor(Math.random()*(container.offsetWidth - 50))
+            if (randomX  <=100) {
+                randomX = Math.floor(Math.random()*(container.offsetWidth - 50))
+            }
             block.style.left = randomX + 'px'
             container.appendChild(block)
             if (child.length != 0) {
@@ -112,9 +136,9 @@
                 container.removeChild(child[0])
                 index--
                 m++
-            }, ((difficult*1000)+500))
+            }, ((difficult*800)+500))
         }
-        intervalId = setInterval(createElement, 400);
+        intervalId = setInterval(createElement, ((difficult*100)-30));
     </script>
 </body>
 </html>

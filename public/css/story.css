@@ -65,6 +65,14 @@ span {
   margin-left: 20px !important;
   margin-top: 26px !important;
 }
+.decay- {
+  width: 10px;
+  position: absolute !important;
+  z-index: 1100;
+  display: none;
+  margin-left: 26px !important;
+  margin-top: 26px !important;
+}
 .soaks {
   width: 17px;
   z-index: 1100;
@@ -75,7 +83,7 @@ span {
   filter: saturate(1.2);
 }
 
-.soaks.show, .belly.show, .decay.show {
+.soaks.show, .belly.show, .decay.show, .decay-.show {
   display: block;
 }
 
@@ -280,9 +288,13 @@ ul {
 }
 
 @keyframes lust-glow {
-  0% {box-shadow: 0 0 0 2px #e55aea;}
-  50% {box-shadow: 0 0 var(--lust) var(--blur) #e55aea;}
-  100% {box-shadow: 0 0 0 2px #e55aea;}
+  0% {box-shadow: 1px 1px 2px #e55aea;}
+  50% {box-shadow: 1px 1px var(--lust) var(--blur) #e55aea;}
+  100% {box-shadow: 1px 1px 2px #e55aea;}
+}
+
+.g-zom {
+  color: #85bb29;
 }
 
 .progress-bar {
@@ -290,6 +302,7 @@ ul {
   float: left;
   z-index: 1;
   top: -8px;
+  /* animation: lust-glow 2s infinite; */
   margin-left: -105px;
   width: 110px;
   height: 110px;
